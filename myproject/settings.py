@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,14 +76,9 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'student_tracker',         # Your MySQL database name
-        'USER': 'root',                    # Your MySQL username
-        'PASSWORD': '1998', # Replace with your MySQL password
-        'HOST': 'localhost',               # Or your DB host
-        'PORT': '3306',                    # Default MySQL port
-    }
+    'default': dj_database_url.config(
+        default='postgresql://student_tracker:1998@localhost:5432/student_tracker'
+    )
 }
 
 
