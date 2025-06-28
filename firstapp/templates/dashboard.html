@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            padding: 32px 40px 40px 40px;
+        }
+        h2, h3 {
+            color: #2d3748;
+            margin-top: 0;
+        }
+        form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #f1f5f9;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus {
+            border: 1.5px solid #4299e1;
+            outline: none;
+            background: #fff;
+        }
+        button[type="submit"] {
+            background: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 18px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #2563eb;
+        }
+        .task {
+            background: #f9fafb;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .task p {
+            margin: 0;
+            font-size: 1.05rem;
+            flex: 1;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #38a169;
+            opacity: 0.7;
+        }
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 28px 0;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 18px 8px 24px 8px;
+            }
+            form {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Hello, {{ user.username }}</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Task Title" required>
+            <input type="text" name="description" placeholder="Task Description" required>
+            <button type="submit">Add Task</button>
+        </form>
+        <hr>
+        <h3>Your Tasks</h3>
+        {% for task in tasks %}
+            <div class="task">
+                <p class="{% if task.completed %}completed{% endif %}"><strong>{{ task.title }}</strong>: {{ task.description }}</p>
+                <div class="task-actions">
+                    <a href="{% url 'complete_task' task.id %}">{% if task.completed %}Mark Incomplete{% else %}Mark Complete{% endif %}</a>
+                    <a href="{% url 'delete_task' task.id %}" onclick="return confirm('Delete this task?');">Delete</a>
+                </div>
+            </div>
+        {% empty %}
+            <p>No tasks yet.</p>
+        {% endfor %}
+        <hr>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</body>
+</html>
